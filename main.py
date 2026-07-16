@@ -41,6 +41,29 @@ def list_expense():
         cols = [d[0] for d in curr.description]
         return [dict(zip(cols, r)) for r in curr.fetchall()]
 
+@mcp.tool()
+def summerize(start_date, end_date, category=None):
+    '''Summerizes the expenses in perticluar time frame for a particular category'''
+    with sqlite3.connect(DB_PATH) as c:
+
+        query = """
+                SELECT category, SUM(amount) AS total_amount
+                FROM expense
+                WHERE date between ? AND ?
+                """
+
+        params = [start_date, end_date]
+        if category:
+            query += "AND category = ?"
+            params.append(query)
+        
+        query += "GROUP BY category ORDER BY category ASC"
+
+        curr = c.execute(query, params)
+        cols = [d[0] for d in curr.description]
+        return [dict(zip(cols, r)) for r in curr.fetchall()]
+
+
 
 if __name__ == "__main__":
     mcp.run()
