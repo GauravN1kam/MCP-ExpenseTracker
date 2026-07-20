@@ -63,6 +63,7 @@ def summerize(start_date, end_date, category=None):
         cols = [d[0] for d in curr.description]
         return [dict(zip(cols, r)) for r in curr.fetchall()]
 
+
 if __name__ == "__main__":
     mcp.run()
 
